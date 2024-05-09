@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UrlController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,4 +21,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware('auth')->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::prefix('url')->group(function () {
+        Route::get('/', [UrlController::class, 'index'])->name('url.index');
+    });
+});
