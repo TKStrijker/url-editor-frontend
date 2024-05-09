@@ -2,9 +2,10 @@
 
 1. `composer install`
 2. `npm install`
-3. `artisan migrate`
-4. Set `API_BASE_URI` to match your API's `APP_URL`
+3. Set `API_BASE_URI` to `http://127.0.0.1:8001/api`
 
 ## Usage
 
-Simply run `php artisan serve` and go to the provided link.
+1. `npm run dev`
+2. `php artisan serve --port=8000`
+3. Go to the link provided by step 2.
