@@ -185,4 +185,14 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Api Base Uri
+    |--------------------------------------------------------------------------
+    |
+    | This adress will be used to connect to the API
+    |
+    */
+
+    'api_base_uri' => env('API_BASE_URI')
 ];
