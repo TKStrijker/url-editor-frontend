@@ -63,6 +63,12 @@
                                     </a>
                                 @endif
                             </div>
+                            <div class="col-md-8 offset-md-4">
+                                {{ __('auth.register prompt')}} 
+                                <a class="btn btn-link" href="{{ route('register') }}"> 
+                                    {{ __('Register')}}
+                                </a>
+                            </div>
                         </div>
                     </form>
                 </div>
