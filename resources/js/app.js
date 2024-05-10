@@ -6,6 +6,7 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+import { i18nVue } from 'laravel-vue-i18n';
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -15,8 +16,18 @@ import { createApp } from 'vue';
 
 const app = createApp({});
 
-import ExampleComponent from './components/ExampleComponent.vue';
-app.component('example-component', ExampleComponent);
+import UrlsComponent from './components/UrlsComponent.vue';
+import UrlComponent from './components/UrlComponent.vue';
+
+app.component('urls-component', UrlsComponent);
+app.component('url-component', UrlComponent);
+
+app.use(i18nVue, {
+    resolve: async lang => {
+        const langs = import.meta.glob('../../lang/*.json');
+        return await langs[`../../lang/${lang}.json`]();
+    }
+})
 
 /**
  * The following block of code may be used to automatically register your

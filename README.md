@@ -6,6 +6,5 @@
 
 ## Usage
 
-1. `npm run dev`
-2. `php artisan serve --port=8000`
-3. Go to the link provided by step 2.
+1. `php artisan serve --port=8000`
+2. Go to the link provided by step 1.
