@@ -1,33 +1,44 @@
 <template>
     <div>
-        <div class="form-group">
-            <label for="original_url">
-                {{ $t('urls.original url') }}
-            </label>
-            <input type="text" id="original_url" class="form-control" v-model="form.original_url">
-            <div v-if="errors.original_url" class="text-danger">
-                {{ errors.original_url }}
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <a class="btn btn-primary" @click="this.editing = !this.editing">{{ $t('models misc.edit') }}</a>
+                </div>
+                <div>
+                    <a class="btn btn-danger" @click="destroy()">
+                        {{ $t('models misc.delete') }}
+                    </a>
+                    <div v-if="hasErrors" class="text-danger">
+                        {{ $t('models misc.unforeseen error')}}
+                    </div>
+                </div>
+                <div v-show="isEditing">
+                    <url-form-component
+                        :url="this.url"
+                        :authenticated_user_id="this.authenticated_user_id"
+                    >
+                    </url-form-component>
+                </div>
+                <div v-show="!isEditing">
+                    <div>
+                        {{ $t('urls.original url') }}: {{ url.original_url }}
+                    </div>
+                    <div>
+                        {{ $t('urls.shortened url') }}: {{ url.shortened_url }}
+                    </div>
+                    <div>
+                        {{ $t('urls.redirect url') }}: {{ url.redirect_url }}
+                    </div>
+                    <div>
+                        {{ $t('models misc.created at') }}: {{ url.created_at }}
+                    </div>
+                    <div>
+                        {{ $t('models misc.updated at') }}: {{ url.updated_at }}
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label for="shortened_url">
-                {{ $t('urls.shortened url') }}
-            </label>
-            <input type="text" id="shortened_url" class="form-control" v-model="form.shortened_url">
-            <div v-if="errors.shortened_url" class="text-danger">
-                {{ errors.shortened_url }}
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="redirect_url">
-                {{ $t('urls.redirect url') }}
-            </label>
-            <input type="text" id="redirect_url" class="form-control" v-model="form.redirect_url">
-            <div v-if="errors.redirect_url" class="text-danger">
-                {{ errors.redirect_url }}
-            </div>
-        </div>
-        <button class="btn btn-primary" @click="save()">{{ $t('models misc.save') }}</button>
     </div>
 </template>
 <script lang="ts">
@@ -38,7 +49,7 @@ import axios from 'axios';
 export default defineComponent({
     props: {
         url: {
-            type: Object as ()=> Url,
+            type: Object as ()=> Url
         },
         authenticated_user_id: {
             type: Number,
@@ -47,50 +58,29 @@ export default defineComponent({
     },
     data() {
         return {
-            form: Object as ()=> Url,
-            errors: {}
+            editing: false,
+            hasErrors: false,
         }
     },
-    mounted() {
-        if (this.url) {
-            this.form = this.url;
+    computed: {
+        isEditing() {
+            return this.editing
         }
     },
     methods: {
-        save() {
-            /**
-             * Check for a user_id to determine if a model exists, 
-             * if so update, otherwise store
-             */ 
-            if (this.form.user_id) {
-                // TODO update logic
-            } else {
-                axios.post('http://127.0.0.1:8001/api/url/', {
-                    user_id: this.authenticated_user_id,
-                    original_url: this.form.original_url,
-                    shortened_url: this.form.shortened_url,
-                    redirect_url: this.form.redirect_url,
-                })
+        destroy() {
+            axios.delete('http://127.0.0.1:8001/api/url/' + this.url.id, {
+                data: {
+                    user_id: this.url.user_id
+                }
+            })
                 .then(response => {
-                    this.$emit('saved', response.data as Url);
-
-                    /**
-                     * Clear the form and errors after a successful save.
-                     */
-                    this.form = {} as Url
-                    this.errors = {}
+                    this.$emit('destroyed', response.data);
+                    this.hasErrors = false;
                 })
                 .catch(error => {
-                    /**
-                     * Assign the errors to a var for ease of use.
-                     */
-                    let e = error.response.data.errors;
-                    
-                    this.errors.original_url = e.original_url[0];
-                    this.errors.shortened_url = e.shortened_url[0];
-                    this.errors.redirect_url = e.redirect_url[0];
-                });
-            }
+                    this.hasErrors = true;
+                })
         }
     }
 })

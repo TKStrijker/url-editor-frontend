@@ -18,9 +18,11 @@ const app = createApp({});
 
 import UrlsComponent from './components/UrlsComponent.vue';
 import UrlComponent from './components/UrlComponent.vue';
+import UrlFormComponent from './components/UrlFormComponent.vue';
 
 app.component('urls-component', UrlsComponent);
 app.component('url-component', UrlComponent);
+app.component('url-form-component', UrlFormComponent);
 
 app.use(i18nVue, {
     resolve: async lang => {

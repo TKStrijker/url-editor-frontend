@@ -1,4 +1,5 @@
 export interface Url {
+    id: number;
     user_id: number;
     original_url: string;
     shortened_url: string;

@@ -9,11 +9,11 @@
                 </h2>
                 <div id="newUrlTarget" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <url-component
+                        <url-form-component
                             :authenticated_user_id="this.authenticated_user_id"
                             @saved="addUrl"
                         >
-                        </url-component>
+                        </url-form-component>
                     </div>
                 </div>
             </div>
@@ -26,25 +26,11 @@
             </div>
         </div>
         <div v-for="url in urlList">
-            <div class="card">
-                <div class="card-body">
-                    <div>
-                        {{ $t('urls.original url') }}: {{ url.original_url }}
-                    </div>
-                    <div>
-                        {{ $t('urls.shortened url') }}: {{ url.shortened_url }}
-                    </div>
-                    <div>
-                        {{ $t('urls.redirect url') }}: {{ url.redirect_url }}
-                    </div>
-                    <div>
-                        {{ $t('models misc.created at') }}: {{ url.created_at }}
-                    </div>
-                    <div>
-                        {{ $t('models misc.updated at') }}: {{ url.updated_at }}
-                    </div>
-                </div>
-            </div>
+            <url-component
+                :url="url"
+                :authenticated_user_id="this.authenticated_user_id"
+                @destroyed="removeUrl"
+            ></url-component>
         </div>
     </div>
 </template>
@@ -79,7 +65,15 @@ export default defineComponent({
             this.urlList.push(newUrl as Url);
         },
         removeUrl(id) {
-            // TODO remove url by id
+            /**
+             * Get the index of the destroyed url, 
+             * then remove it from the rendered list.
+             */
+            let index = this.urlList.findIndex(url => {
+                return url.id === id
+            })
+
+            this.urlList.splice(index, 1)
         }
     },
 })
