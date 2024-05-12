@@ -13,7 +13,7 @@
             <label for="shortened_url">
                 {{ $t('urls.shortened url') }}
             </label>
-            <input type="text" id="shortened_url" class="form-control" v-model="form.shortened_url">
+            <input type="text" id="shortened_url" class="form-control" v-model="shortenedUrl">
             <div v-if="errors.shortened_url" class="text-danger">
                 {{ errors.shortened_url }}
             </div>
@@ -54,6 +54,11 @@ export default defineComponent({
     mounted() {
         if (this.url) {
             this.form = this.url;
+        }
+    },
+    computed: {
+        shortenedUrl() {
+            return this.shorten()
         }
     },
     methods: {
@@ -102,6 +107,13 @@ export default defineComponent({
             this.errors.original_url = e.original_url[0];
             this.errors.shortened_url = e.shortened_url[0];
             this.errors.redirect_url = e.redirect_url[0];
+        },
+        /**
+             * Extract the domain from the original url
+             * and set it as the shortened url.
+             */
+        shorten() {
+            return this.form.shortened_url = String(this.form.original_url).replace(/.+\/\/|www.|\..+/g, '')
         }
     }
 })
