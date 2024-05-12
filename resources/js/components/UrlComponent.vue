@@ -4,8 +4,6 @@
             <div class="card-body">
                 <div>
                     <a class="btn btn-primary" @click="this.editing = !this.editing">{{ $t('models misc.edit') }}</a>
-                </div>
-                <div>
                     <a class="btn btn-danger" @click="destroy()">
                         {{ $t('models misc.delete') }}
                     </a>
@@ -25,7 +23,10 @@
                         {{ $t('urls.original url') }}: {{ url.original_url }}
                     </div>
                     <div>
-                        {{ $t('urls.shortened url') }}: {{ url.shortened_url }}
+                        {{ $t('urls.shortened url') }}: 
+                        <a class="btn btn-link" :href="this.url.redirect_url">
+                            {{ url.shortened_url }}
+                        </a>
                     </div>
                     <div>
                         {{ $t('urls.redirect url') }}: {{ url.redirect_url }}
